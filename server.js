@@ -5,7 +5,7 @@ const connectDB = require("./config/db.js");
 const cors = require("cors");
 // const userRoutes = require("./routes/userRoutes.js");
 const contactRoutes = require("./routes/contactRoute.js");
-
+const commentRoutes = require("./routes/commentRoute.js");
 const app = express();
 
 if (process.env.NODE_ENV === "development") {
@@ -25,6 +25,7 @@ connectDB();
 
 // app.use("/user", userRoutes);
 app.use("/contact", contactRoutes);
+app.use("/comments", commentRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running..");
