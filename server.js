@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 const corsOptions = {
-  origin: "http://127.0.0.1:5500",
+  origin: "https://www.ruiasolutions.com",
   credentials: true,
 };
 
