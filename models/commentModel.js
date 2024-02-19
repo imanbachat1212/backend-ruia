@@ -10,6 +10,10 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    postIdentifier: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
