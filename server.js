@@ -12,8 +12,12 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+// const corsOptions = {
+//   origin: "https://www.ruiasolutions.com",
+//   credentials: true,
+// };
 const corsOptions = {
-  origin: "https://www.ruiasolutions.com",
+  origin: "http://127.0.0.1:5500",
   credentials: true,
 };
 
