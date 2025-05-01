@@ -56,6 +56,14 @@ const corsOptions = {
   origin: "http://127.0.0.1:5500", // update for production
   credentials: true,
 };
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "default-src 'self'");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  next();
+});
+
 app.use(cors(corsOptions));
 
 // Body parser
