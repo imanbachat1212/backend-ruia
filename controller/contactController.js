@@ -18,10 +18,11 @@ exports.createContact = async (req, res) => {
         pass: process.env.EMAIL_PASS,
       },
     });
+    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS); // Only for debugging, remove after fixing the issue
 
     // Email options
     let mailOptions = {
-      from: "farah.salhab@ruiasolutions.com", // Replace with your email address
+      from: "farah.salhab@ruiaconsulting.onmicrosoft.com", // Replace with your email address
       to: "farah.b.salhab@gmail.com", // Where you want to receive the emails
       subject: "New Contact Form Submission",
       text: `You have a new contact form submission from:
@@ -35,12 +36,13 @@ Message: ${req.body.message}`,
     // Send email
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        console.log(error);
-        res.status(500).json({ message: "Error sending email." });
-      } else {
-        console.log("Email sent: " + info.response);
-        res.status(201).json(newContact);
+        console.error("Error sending email:", error);
+        return res
+          .status(500)
+          .json({ message: "Error sending email.", error: error.message });
       }
+      console.log("Email sent: " + info.response);
+      return res.status(201).json(newContact);
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
