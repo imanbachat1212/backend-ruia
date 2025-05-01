@@ -1,7 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
-const helmet = require("helmet"); // <-- added
+const helmet = require("helmet");
 const cors = require("cors");
 const connectDB = require("./config/db.js");
 
@@ -16,18 +16,44 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// Security Headers
-app.use(helmet()); // adds nosniff, xss protection, etc.
-
-// Optional: explicitly add X-Content-Type-Options (already done by helmet)
-app.use((req, res, next) => {
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  next();
-});
+// ✅ Helmet with Custom Configuration
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://www.googletagmanager.com",
+          "https://cdnjs.cloudflare.com",
+          "https://assets.calendly.com",
+        ],
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://fonts.googleapis.com",
+          "https://assets.calendly.com",
+        ],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "https:"],
+        frameSrc: ["https://calendly.com"],
+        connectSrc: ["'self'", "https://api.calendly.com"],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+    frameguard: { action: "deny" }, // ✅ X-Frame-Options: DENY
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" }, // ✅ Referrer-Policy
+    crossOriginEmbedderPolicy: false, // optional if using third-party iframes
+    xContentTypeOptions: true, // ✅ X-Content-Type-Options: nosniff
+  })
+);
 
 // CORS
 const corsOptions = {
-  origin: "http://127.0.0.1:5500", // adjust for production
+  origin: "http://127.0.0.1:5500", // update for production
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -35,19 +61,19 @@ app.use(cors(corsOptions));
 // Body parser
 app.use(express.json());
 
-// DB
+// DB connection
 connectDB();
 
 // Routes
 app.use("/contact", contactRoutes);
 app.use("/comments", commentRoutes);
 
-// Default route
+// Default Route
 app.get("/", (req, res) => {
   res.send("API is running..");
 });
 
-// Server start
+// Server Start
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
