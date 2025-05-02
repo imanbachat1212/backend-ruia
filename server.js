@@ -53,7 +53,8 @@ app.use(
 
 // CORS
 const corsOptions = {
-  origin: "http://127.0.0.1:5500", // update for production
+  origin: "https://farahsalhab.com",
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
 app.use((req, res, next) => {
