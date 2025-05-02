@@ -17,37 +17,37 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // ✅ Proper Helmet Setup – DO NOT overwrite it with manual headers later
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      useDefaults: true,
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: [
-          "'self'",
-          "'unsafe-inline'",
-          "https://www.googletagmanager.com",
-          "https://cdnjs.cloudflare.com",
-          "https://assets.calendly.com",
-        ],
-        styleSrc: [
-          "'self'",
-          "'unsafe-inline'",
-          "https://fonts.googleapis.com",
-          "https://assets.calendly.com",
-        ],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https:"],
-        frameSrc: ["https://calendly.com"],
-        connectSrc: ["'self'", "https://api.calendly.com"],
-        objectSrc: ["'none'"],
-      },
-    },
-    frameguard: { action: "deny" },
-    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
-    crossOriginEmbedderPolicy: false,
-  })
-);
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: {
+//       useDefaults: true,
+//       directives: {
+//         defaultSrc: ["'self'"],
+//         scriptSrc: [
+//           "'self'",
+//           "'unsafe-inline'",
+//           "https://www.googletagmanager.com",
+//           "https://cdnjs.cloudflare.com",
+//           "https://assets.calendly.com",
+//         ],
+//         styleSrc: [
+//           "'self'",
+//           "'unsafe-inline'",
+//           "https://fonts.googleapis.com",
+//           "https://assets.calendly.com",
+//         ],
+//         fontSrc: ["'self'", "https://fonts.gstatic.com"],
+//         imgSrc: ["'self'", "data:", "https:"],
+//         frameSrc: ["https://calendly.com"],
+//         connectSrc: ["'self'", "https://api.calendly.com"],
+//         objectSrc: ["'none'"],
+//       },
+//     },
+//     frameguard: { action: "deny" },
+//     referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+//     crossOriginEmbedderPolicy: false,
+//   })
+// );
 
 // ✅ DO NOT manually set headers again (Helmet already does this!)
 
