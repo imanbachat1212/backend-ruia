@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// ✅ Helmet with Custom Configuration
+// ✅ Proper Helmet Setup – DO NOT overwrite it with manual headers later
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -41,33 +41,25 @@ app.use(
         frameSrc: ["https://calendly.com"],
         connectSrc: ["'self'", "https://api.calendly.com"],
         objectSrc: ["'none'"],
-        upgradeInsecureRequests: [],
       },
     },
-    frameguard: { action: "deny" }, // ✅ X-Frame-Options: DENY
-    referrerPolicy: { policy: "strict-origin-when-cross-origin" }, // ✅ Referrer-Policy
-    crossOriginEmbedderPolicy: false, // optional if using third-party iframes
-    xContentTypeOptions: true, // ✅ X-Content-Type-Options: nosniff
+    frameguard: { action: "deny" },
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+    crossOriginEmbedderPolicy: false,
   })
 );
 
-// CORS
+// ✅ DO NOT manually set headers again (Helmet already does this!)
+
+// ✅ CORS – must be placed after helmet but before routes
 const corsOptions = {
-  origin: "https://farahsalhab.com",
+  origin: "https://farahsalhab.com", // update for prod
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
-app.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", "default-src 'self'");
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-  next();
-});
-
 app.use(cors(corsOptions));
 
-// Body parser
+// JSON body parser
 app.use(express.json());
 
 // DB connection
@@ -77,12 +69,12 @@ connectDB();
 app.use("/contact", contactRoutes);
 app.use("/comments", commentRoutes);
 
-// Default Route
+// Home route
 app.get("/", (req, res) => {
   res.send("API is running..");
 });
 
-// Server Start
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
